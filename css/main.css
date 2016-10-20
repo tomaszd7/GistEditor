@@ -1,0 +1,67 @@
+
+/*main CSS*/ 
+body {
+    background-color: #00BCD4;
+}
+
+.top-wrapper {    
+    margin-top: 100px;
+}
+
+
+/*// jumbotron*/
+
+.jumbotron.bg-primary {
+    background-color: #337ab7;
+}
+
+
+/*logging CSS*/
+form {
+    margin: 0;
+}
+
+
+
+/*application CSS*/
+textarea {
+    width: 100%;
+    height: 400px;
+}
+
+.header p {
+    margin: 0;
+    display: inline-block;
+    padding: 0 20px;
+}
+
+.header button {
+    float: right;
+}
+
+#buttons {
+    margin-bottom: 15px;
+}
+
+#list p {
+    position: relative;
+    cursor: pointer;
+}
+
+.list-box {
+    position: relative;
+}
+
+.list-public {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+
+
+
+/*hide class*/
+.none {
+    display: none;
+}

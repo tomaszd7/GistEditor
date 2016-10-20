@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>GistApi</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="css/codemirror.css">
+        <link rel="stylesheet" href="css/main.css"/>
+    </head>
+    <body>
+            
+            <div class="jumbotron bg-primary">
+                <div class="container">
+                    <h2 >Github GIST API Editor</h2>                    
+                </div>
+            </div>
+                
+            
+            <div class="container">
+
+                <div id="logging" class="row">
+                    <div class="col-xs-2 well">
+                        <form method="POST">
+                            <div class="form-group">
+                                <label>User</label>
+                                <input name="user" class="form-control" type="text" placeholder="User">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input name="password" class="form-control" type="password" placeholder="Password">
+                            </div>
+                            <button id="login-btn" class="btn btn-primary">Log in</button>                            
+                        </form>                                                
+                    </div>
+                </div>
+
+                <div id="application" class="row none">
+                    <div id="menu" class="col-xs-2 well">
+                        <p> <b>User</b> <span id="user" class='text-center'></span></p>
+                        <button id="get-gists" class="btn btn-primary">Get Gists</button>     
+                        <button id="logout-btn" class="btn btn-danger">Logout</button>                             
+                    </div>
+                    <div id="list" class="col-xs-2 well">
+                        <div id="buttons">
+                            <button name="public" class="btn btn-xs btn-info">Public</button>
+                            <button name="private" class="btn btn-xs btn-info">Private</button>
+                            <button name="all" class="btn btn-xs btn-primary">All</button>
+                        </div>
+                        
+                    </div>
+                    <div id="details" class="col-xs-8 well">
+                        <div class="header">
+                            <p class="created"></p>
+                            <p class="language"></p>
+                            <p class="size"></p>
+                            <button class="btn btn-primary" disabled>Save</button>
+                        </div>
+                        <textarea></textarea>
+                    </div>                
+                </div>     
+                
+            </div>
+
+
+
+        <script src="js/jquery-3.1.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+
+        <!--// codeMirror is not working--> 
+        <!--        <script src="./src/edit/CodeMirror.js"></script>
+                <script src="./js/javascript/javascript.js"></script>-->
+
+        <script src="js/Displayer.js"></script>
+        <script src="js/GistApi.js"></script>
+        <script>
+
+            var displayer = new Displayer(new GistApi());
+            displayer.main();
+            
+        </script>
+    </body>
+</html>
