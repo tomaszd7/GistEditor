@@ -1,7 +1,12 @@
 function Displayer(apiObject) {
 
     this.api = apiObject;
+    this.codeMirror = null;
 
+    /* tag ids from index.html stored here 
+     * 
+     *but I am not consequent in the code :/ */
+    
     // html ids for sections 
     this.menuId = 'menu';
     this.listId = 'list';
@@ -28,6 +33,9 @@ function Displayer(apiObject) {
     };
 
     // callback function 
+    /*
+     * @param {this object} context
+     */
     this.displayGistsList = function (context) {
         // remove current list 
         $('#' + context.listId + ' div.list-box').remove();
@@ -51,6 +59,10 @@ function Displayer(apiObject) {
     };
 
     // callback funciton
+    /*
+     * @param {this object} context
+     * @param {string} gistId
+     */
     this.displayGistDetails = function (context, gistId) {
         // save current gist id for future actions and easy access
         context.currentGistId = gistId;
@@ -68,17 +80,25 @@ function Displayer(apiObject) {
         $('.' + context.sizeClass).text(gistPath[filename].size);
         $('.' + context.createdClass).text(context.api.gists[gistId].created_at);
         
-        // add details 
-
-        var $textarea = $('textarea');
-        //  $details.addClass(context.listClass + ' text-left');
-        var content = gistPath[filename].content;
-        // parse eol into <br> tags - <pre> tag does NOT need this 
-        // content = content.replace(/(?:\r\n|\r|\n)/g, '<br />');
-        $('#' + context.detailId).append($textarea.val(content));
+        var content = gistPath[filename].content;  
+        
+        // add details          
+        // adding codeMirror       
+        if (context.codeMirror) {
+            context.codeMirror.setValue(content);
+        } else {
+            context.codeMirror = CodeMirror($('#textarea')[0], {
+                value: content,
+                mode: "javascript",
+                lineNumbers: true,
+                lineWrapping: true
+            });  
+        }
     };
 
-    
+    /* 
+     * main function after success login 
+     */
     this.displayApplication = function(context) {
         $('#logging').toggleClass('none');
         $('#application').toggleClass('none');     
@@ -90,11 +110,19 @@ function Displayer(apiObject) {
         $('#login-btn').removeClass('btn-primary').addClass('btn-danger').attr('disabled', 'disabled');        
     }
     
+    /*
+     * disable Save button after new gist details upload
+     */
     this.disableSaveButton = function () {
         $('.header button').attr('disabled', 'disabled');  
     }
 
 
+    /*
+     * function for recreating gist list as current gist list 
+     * when Public/private/ all buttons are clicked
+     * full list taken from github is not changed
+     */
     this.gistsObjectCopy = function(gists, bool) {        
         var newObj = {};                
         for (var id in gists) {
@@ -139,17 +167,17 @@ function Displayer(apiObject) {
             // get current gist content 
             console.log('inside Save');
             if (self.currentGistId) {
-                var newContent = $('textarea').val();
+                var newContent = self.codeMirror.getValue();
                 self.api.editGistDetails(self.currentGistId, newContent);                
             }       
             // disabled save button 
             self.disableSaveButton();          
         });        
         
-        // unlock save button when textarea is omdified 
-        $('textarea').keyup(function(event) {
+        // unlock save button when textarea is modified 
+        $('#textarea').keyup(function(event) {
             $('.header button').removeAttr('disabled');            
-        })
+        });
         
         // log user 
         $('#' + this.loginBtnId).click(function(event) {
@@ -173,7 +201,7 @@ function Displayer(apiObject) {
                 // unlock 
                 $loginBtn.removeClass('btn-danger').addClass('btn-primary').removeAttr('disabled');
             }            
-        })
+        });
         
         
         // buttons for displaying public/ private gists         

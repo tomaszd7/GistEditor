@@ -14,6 +14,15 @@ function GistApi() {
     this.credentials = null;
 
     // with callback 
+    /*
+     * @param {string} user
+     * @param {string} password
+     * @param {this object} context
+     * @param {function} fnComplete function to call back when user is authorized
+     * @info function sends credentials to github and receives new token 
+     *      if no valid token was found on github
+     *      however I am not using token in further functions but credentials
+     */
     this.authenticateUser = function (user, password, context, fnComplete) {     
         $.ajax({
             'url': 'https://api.github.com/authorizations',
@@ -48,6 +57,16 @@ function GistApi() {
     };
 
     // with callback
+    /*
+     * @param {string} user
+     * @param {string} password
+     * @param {this object} context
+     * @param {function} fnSuccess function to call back when user is authorized
+     * @param {function} fnFailure function to call back when user is NOT authorized
+     * @info function gets tokens from github based oncredentials and if one is matched 
+     *      with out this.accessNote - success, else - tried to create new token with 
+     *      this.authenticateUser else shows error
+     */
     this.getAuthorizations = function (user, password, context, fnSuccess, fnFailure) {
         this.user = user;
         this.url = this.host + '/users/' + this.user + '/gists';
@@ -75,8 +94,7 @@ function GistApi() {
                         this.logged = true;
                         break;
                     }
-                }                
-                console.log(this.token);                
+                }                             
             },
             'error': function (xhr) {
                 this.error = {
@@ -87,7 +105,7 @@ function GistApi() {
                 console.log(this.error);
             },
             'complete': function () {
-                console.log('Stored authentication completed');
+                console.log('Get authorizations completed');
                 // if success - token is already there
                 if (this.logged && fnSuccess) {
                     fnSuccess(context);
@@ -108,9 +126,13 @@ function GistApi() {
         });
     };                    
 
-
+    /*
+     * @param {this object} context
+     * @param {function} fnComplete - function to call back for displaying gist list 
+     * @info function to get all gists from github
+     *      and store them in this.gists and copy in this.currentGists
+     */
     this.getUserGists = function (context, fnComplete) {
-        console.log('token ' + this.token.hashed_token);
         $.ajax({
             'url': 'https://api.github.com/gists',
             'headers': {
@@ -154,6 +176,12 @@ function GistApi() {
         });
     };
 
+    /*
+     * @param {string} gistId
+     * @param {this object} context
+     * @param {function} fnComplete - function to display gist details as call back
+     * @info function gets details of gist from github, no credentials 
+     */
     this.getGistDetails = function (gistId, context, fnComplete) {
             var gistPath = this.gists[gistId];
             $.ajax({
@@ -183,10 +211,13 @@ function GistApi() {
             });
     };
 
-    this.editGistDetails = function (gistId, newContent) {
-        
-        var filename = Object.keys(this.gists[gistId].files)[0];
-        
+    /*
+     * @param {string} gistId
+     * @param {string} newContent
+     * @info function saves new content from editor field into github gist 
+     */
+    this.editGistDetails = function (gistId, newContent) {        
+        var filename = Object.keys(this.gists[gistId].files)[0];        
         // prepare json body 
         var jsonBody = {};
         jsonBody['description'] = this.gists[gistId].description;
@@ -194,10 +225,8 @@ function GistApi() {
         jsonBody['files'] = {};
         jsonBody['files'][filename] = {
             'content': newContent
-        };        
-        console.log(jsonBody, JSON.stringify(jsonBody));        
+        };              
         // save to api.gists variables
-        console.log(this.gists[gistId].files[filename]);
         this.gists[gistId].files[filename].content = newContent;
         
         $.ajax({

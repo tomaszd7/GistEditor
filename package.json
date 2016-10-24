@@ -1,0 +1,14 @@
+{
+  "name": "newgist",
+  "version": "1.0.0",
+  "description": "New Gist with CodeMirror",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+  	"codemirror": "5.20.2"
+  },
+  "author": "TD",
+  "license": "ISC"
+}
